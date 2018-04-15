@@ -1,0 +1,17 @@
+{
+  "name": "node-rbx",
+  "version": "1.1.0",
+  "description": "Execute simple actions on roblox website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "scriptbased",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "node-fetch": "^2.1.2",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2"
+  }
+}
