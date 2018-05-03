@@ -26,6 +26,9 @@ const post_req = require('./lib/util/post.js')
 
 global.Shouts = {};
 global.Walls = {};
+global.JoinRequests = {};
+global.Blurbs = {};
+global.Statuses = {};
 
 
 class RobloxApi {
@@ -292,7 +295,7 @@ class RobloxApi {
      */
     async UnfollowUser(userId) {
         if (!this.authenticated) throw new Error("Not authenticated");
-        return Boolean(await userFuncs.unfollowUser(userId))
+        return Boolean(await userFuncs.unfollow(userId))
     }
 
 
@@ -309,9 +312,110 @@ class RobloxApi {
         return Boolean(await userFuncs.MessageUser(userId, opts));
     }
 
+    /**
+     * Changes the authenticated user's status
+     * @param {String} newStatus The new status
+     */
+    async changeStatus(newStatus) {
+        return Boolean(await userFuncs.changeStatus(newStatus));
+    }
+
+
+    /**
+     * 
+     * @param {String} newBlurb The new blurb
+     */
+    async changeBlurb(newBlurb) {
+        return Boolean(await userFuncs.changeBlurb(newBlurb));
+    }
+
+
+    /**
+     * Send a friend request to a user
+     * @param {Number} userId The user to send friend request to
+     */
+    async sendFriendRequest(userId) {
+        return userFuncs.sendFriendRequest(userId);
+    }
+
+
+    /**
+     * Unfriend a user
+     * @param {Number} userId The id of the user to unfriend
+     */
+    async unfriendUser (userId) {
+        return userFuncs.unfriendUser(userId);
+    }
+
+
+    /**
+     * Checks if a user is being followed by another user
+     * @param {Number} userId The user potentially being followed
+     * @param {Number} targetId The user potentially following the other user
+     */
+    async userIsFollowing(userId, targetId) {
+        return userFuncs.isFollowing(userId, targetId);
+    }
+
+
+    /**
+     * Gets the followers following authenticated account, or specified userId
+     * @param {Number} userId The id of the user to get the followers from
+     */
+    async getFollowers(userId) {
+        return [].concat(await userFuncs.getFollowers(userId||this.account.userId)).map(x=>new userClass.PartialUser(x));
+    }
+
+    /**
+     * Gets the users the authenticated user is following
+     */
+    async getFollowing() {
+        return [].concat(await userFuncs.getFollowing()).map(x=>new userClass.PartialUser(x));
+    }
 
 
 
+
+    /**
+     * Gets the authenticated user's groups or user specified with userId
+     * @param {Number} userId The id of the user to get their groups 
+     */
+    async getUserGroups(userId) {
+        return [].concat(await userFuncs.getUserGroups(userId||this.account.userId)).map(x=>new groupClass.UserGroup(x));
+    }
+
+
+    /**
+     * Checks if a name is taken
+     * @param {String} name Name to check
+     */
+    async isNameTaken(name) {
+        return Boolean(await userFuncs.isNameTaken(name));
+    }
+    
+
+
+    /**
+     * Checks if two users are friends
+     * @param {Number} userId1 Id of one user
+     * @param {Number} userId2 Id of other user
+     */
+    async isFriends(userId1, userId2) {
+        return userFuncs.isFriends(userId1, userId2);
+    }
+
+
+    async getUserPrimaryGroup(userId) {
+        return userFuncs.getUserPrimaryGroup(userId);
+    }
+
+
+
+
+
+    async getUserBadges(userId) {
+        return userFuncs.getUserRobloxBadges(userId);
+    }
 
     // ASSETS \\
     /**
@@ -334,6 +438,25 @@ class RobloxApi {
         return new assetClass.Pass(await assetFuncs.getPassInfo(passId));
     }
 
+
+    /**
+     * Gets a user's places
+     * @param {Number} userId The user id
+     */
+    async getUserPlaces(userId) {
+        return userFuncs.getUserPlaces(userId);
+    }
+
+    /**
+     * Gets comments on an asset
+     * @param {Number} assetId The asset id
+     */
+    async getAssetComments (assetId) {
+        return assetFuncs.getAssetComments(assetId);
+    }
+
+
+    
 
     // AVATAR \\
 
@@ -417,6 +540,8 @@ class RobloxApi {
         this.authenticated = false;
         return post_req('https://api.roblox.com/sign-out/v1')
     }
+    
+    
     
 }
 
