@@ -456,6 +456,15 @@ class RobloxApi {
     }
 
 
+    /**
+     * Search for music
+     * @param {String} name The name to search for
+     */
+    async searchMusic(name) {
+        return assetFuncs.searchMusic(name);
+    }
+    
+
     
 
     // AVATAR \\

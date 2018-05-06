@@ -1,8 +1,8 @@
 const n = require('./index.js');
 
 const rbx = new n({
-    username:"username",
-    password:"password"
+    username:"Username",
+    password:"Password"
 })
 
 
@@ -12,7 +12,15 @@ var groups = [3544434, 3137360, 2616375, 3217670, 2633056, 2627479, 3295419, 794
 
 
 rbx.login().then( () => {
+
+    rbx.getGroup(3232454).then(group=>{
+        var onJoin = new group.onJoinRequest(group.id);
+        onJoin.on('requests', function(requests) {
+            requests.shift().acceptRequest();
+        })
+    })
     
+    /*
     var blurbEvent = new rbx.account.onBlurbChange(rbx.account.userId);
     var statusEvent = new rbx.account.onStatusChange(rbx.account.userId);
     blurbEvent.on('change', function(newBlurb, oldBlurb) {
@@ -30,9 +38,20 @@ rbx.login().then( () => {
         console.log(`Name taken: ${nameTaken}`)
     })
 
-    rbx.GetUserByName('krislayer').then(user=>{
-        
+    rbx.GetUserByName('CodeTheIdiot').then(code=>{
+        code.getFriends().then(friendList => {
+            friendList.forEach(friendHalf => {
+                friendHalf.getUser().then(friend => {
+                    console.log(`${friend.username} is a friend`)
+                    var onStatus = new friend.onStatusChange(friend.userId);
+                    onStatus.on('change', function(newStatus) {
+                        console.log(`${friend.username} changed status to ${newStatus}`)
+                    })
+                })
+            })
+        })
     })
+    
     /*for (var i=0;i<groups.length;i++) {
         let group = groups[i];
         console.log(group)
@@ -48,7 +67,7 @@ rbx.login().then( () => {
                 console.log(shout);
             })
         })
-    }*/
+    }
     groups.forEach(groupId=>{
         rbx.getGroup(groupId).then(group=>{
             var onWallPost = new group.onWallPost(group.id);
@@ -62,5 +81,5 @@ rbx.login().then( () => {
                 console.log(shout);
             })
         })
-    })
+    })*/
 })
